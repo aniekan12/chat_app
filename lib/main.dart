@@ -2,13 +2,16 @@ import 'package:chat_app/messaging/message_wall.dart';
 import 'package:chat_app/messaging/messageform.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'auth/android_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'auth/stub.dart'
+    if (dart.library.io) 'auth/android_auth.dart'
+    if (dart.library.html) 'auth/web_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await AndroidAuthen().initializeApp();
+
+  await AuthProvider().initializeApp();
   runApp(
     MyApp(),
   );
@@ -47,7 +50,7 @@ class _LandingPageState extends State<LandingPage> {
 
   void _signIn() async {
     try {
-      final creds = await AndroidAuthen().signInWithGoogle();
+      final creds = await AuthProvider().signInWithGoogle();
       print(creds);
       setState(() {
         _signedIn = true;
